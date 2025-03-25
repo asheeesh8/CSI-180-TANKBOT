@@ -1,0 +1,62 @@
+const int MotorPinA = 12; //direction pin motor A
+const int MotorSpeedPinA = 3;//speed pin Motor A PWM pin
+const int MotorPinB = 13; //direction pin Motor B
+const int MotorSpeedPinB = 11;//speed pin for Motor B PWM pin
+
+//MotorPinA = 13
+//MotorSpeedPinA = 11
+//MotorPinB = 12
+//MotorSpeedPinB = 10   //also could be why motor A isnt working
+
+const int ClockWise  = HIGH; //Clockwise direction (high volt)
+const int CounterClock = LOW;//Counterclockwise direction (low volt)
+
+void setup() {
+  //motor control pins = output
+  pinMode(MotorPinA, OUTPUT);
+  pinMode(MotorSpeedPinA, OUTPUT);
+
+  pinMode(MotorPinB, OUTPUT);
+  pinMode(MotorSpeedPinB, OUTPUT);
+
+
+  Serial.begin(9600); //serial monitor at 9600 baud rate
+}
+
+ //controls direction and speed of motors
+ //dir = direction to rotate = clockwise or counterclock
+ //speed = 0/255 PWM value
+
+void moveMotors(int dir, int speed) {
+  digitalWrite(MotorPinA, dir);  //direction for motor A
+  analogWrite(MotorSpeedPinA, speed);  //speed for motor A
+  digitalWrite(MotorPinB, dir);    //direction for motor B
+  analogWrite(MotorSpeedPinB, speed);  //speed for motor B
+}
+
+void loop() {
+  //checks serial monitor for input/data
+  if (Serial.available()) { //if there is then
+    char command = Serial.read();//read the command
+    
+    //S = stop both motors
+    if (command == 'S') {
+      moveMotors(LOW, 0);//Stop both motors 0 speed and dir low
+      Serial.println("Both motors stopped.");
+    }
+    
+    //F = move both forward
+    else if (command == 'F') {
+      moveMotors(ClockWise, 200); // 200/255 speed move both forward
+      Serial.println("Both moving forward"); 
+    }
+
+    //B = move both backwards
+    else if (command == 'B') {
+      moveMotors(CounterClock, 200); // 200/255 speed move both backwards
+      Serial.println("Both moving backwards");
+    }
+  }
+}
+
+
