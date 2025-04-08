@@ -31,18 +31,22 @@ AnalogStickRight.init() #initialize the right analog stick to read inputs
 def get_motor_speeds():
     # Get joystick values (Y-axis) for both joysticks
     moveA = AnalogStickLeft.get_axis(1)#Get Y axis val for left joystick
-    moveB = AnalogStickRight.get_axis(1)#Get Y axis val the right joystick
+    moveB = AnalogStickRight.get_axis(3)  # Get Y axis val the right joystick
+
+    print(f"(Axis1): {moveA:.3f}, (Axis3): {moveB:.3f}")
 
     #pushing up = neg, down = positive so need change to normal
 
     #flip values so up = forward (pos). down = back (neg)
     moveA = -moveA
-    moveB = -moveB
+
 
     #joystick vals default = -1 to 1
     #Convert the joystick values into range of -255 to 255
     speedA = int(moveA * 255)#left joystick input scaled to motor A speed
     speedB = int(moveB * 255)#right joystick input scaled to motor B speed
+
+    print(f"SpeedA: {speedA}, SpeedB: {speedB}")
 
     #stick drift counter ------------------------------------------------
     if abs(speedA) < 30:
@@ -73,7 +77,6 @@ try:
         #^for debugging deadzone + shows if connection working stable or not.
 
         time.sleep(0.1) #delay for 0.1 seconds between each loop.
-        #reduce frequencies of data being sent and read
         #much more responsive
 
 except Exception as e:
