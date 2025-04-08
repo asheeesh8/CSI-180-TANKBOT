@@ -1,6 +1,6 @@
 // MOTOR A (LEFT) PIN DEFINITIONS
 const int dirPinA = 12;//Direction pin Motor A (controls the rotation direction)
-const int speedPinA = 3;//PWM speed pin Motor A (controls the motor speed)
+const int speedPinA = 10;//PWM speed pin Motor A (controls the motor speed)
 
 // MOTOR A (RIGHT) PIN DEFINITIONS
 const int dirPinB = 13; // Direction pin for Motor B (controls the rotation direction)
@@ -21,6 +21,22 @@ void setup() {
   Serial.begin(9600);//9600 baud rate
 }
 
+void moveMotor(int input, int dirPin, int speedPin){
+  if (input > 0) {
+      //rightspeed positive = rotate clockwise
+      digitalWrite(dirPin, rotateClockwise);//set clockwise
+      analogWrite(speedPin, input); //speed using PWM
+    } else if (input < 0) {
+      //rightspeed negative = rotate counterclocwise
+      digitalWrite(dirPin, rotateCounterClockwise); //set counterclockwise
+      analogWrite(speedPin, -input); //speed using PWM
+    } else {
+      //rightspeed 0 = stop
+      digitalWrite(dirPin, LOW);//LOW = no rotation
+      analogWrite(speedPin, 0);//speed 0 = no rotation
+    }
+}
+
 void loop() {
   //Check for data from serial connection
   if (Serial.available()) {
@@ -38,36 +54,10 @@ void loop() {
 
     leftSpeed = constrain(leftSpeed, -255, 255);//make sure leftSpeed is between -255 - 255
     rightSpeed = constrain(rightSpeed, -255, 255);//make sure rightSpeed is between -255 - 255
+    Serial.println(leftSpeed);
+    Serial.println(rightSpeed);
 
-    // Controlling Motor A (left) based on leftSpeed value
-    if (leftSpeed > 0) {
-      //leftspeed positive = rotate clockwise
-      digitalWrite(dirPinA, rotateClockwise);//set to clockwise
-      analogWrite(speedPinA, leftSpeed);//speed using PWM
-    } else if (leftSpeed < 0) {
-      //leftspeed negative = rotate counterclockwise
-      digitalWrite(dirPinA, rotateCounterClockwise);//set counterclockwise
-      analogWrite(speedPinA, -leftSpeed);//speed using PWM 
-    } else {
-      //leftspeed 0 = stop
-      digitalWrite(dirPinA, LOW);//LOW = no rotation
-      analogWrite(speedPinA, 0);//speed 0 = no rotation
-    }
-
-    // Control Motor B (right) off the rightSpeed value
-    if (rightSpeed > 0) {
-      //rightspeed positive = rotate clockwise
-      digitalWrite(dirPinB, rotateClockwise);//set clockwise
-      analogWrite(speedPinB, rightSpeed); //speed using PWM
-    } else if (rightSpeed < 0) {
-      //rightspeed negative = rotate counterclocwise
-      digitalWrite(dirPinB, rotateCounterClockwise); //set counterclockwise
-      analogWrite(speedPinB, -rightSpeed); //speed using PWM
-    } else {
-      //rightspeed 0 = stop
-      digitalWrite(dirPinB, LOW);//LOW = no rotation
-      analogWrite(speedPinB, 0);//speed 0 = no rotation
-    }
+    moveMotor(leftSpeed, dirPinA, speedPinA);
+    moveMotor(rightSpeed, dirPinB, speedPinB);
   }
 }
-
