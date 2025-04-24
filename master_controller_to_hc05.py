@@ -33,13 +33,13 @@ def get_motor_speeds():
     moveA = AnalogStickLeft.get_axis(1)#Get Y axis val for left joystick
     moveB = AnalogStickRight.get_axis(3)  # Get Y axis val the right joystick
 
-    print(f"(Axis1): {moveA:.3f}, (Axis3): {moveB:.3f}")
+    print(f"(Axis1): {moveA:.3f}, (Axis4): {moveB:.3f}")
 
     #pushing up = neg, down = positive so need change to normal
 
     #flip values so up = forward (pos). down = back (neg)
     moveA = -moveA
-
+    moveB = -moveB
 
     #joystick vals default = -1 to 1
     #Convert the joystick values into range of -255 to 255
